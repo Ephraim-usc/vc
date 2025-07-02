@@ -15,7 +15,10 @@ setup(
     long_description=readme(),
     long_description_content_type="text/markdown",
     url="https://github.com/Ephraim-usc/vc.git",
-    packages=find_packages(),
+    packages=['vc', 'vc.human'],
+    package_dir = {
+       'vc': 'vc',
+       'vc.human': 'vc/human'},
     python_requires=">=3",
     install_requires=[
         "numpy>=1.14.5",
