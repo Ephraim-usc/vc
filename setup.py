@@ -1,8 +1,5 @@
 from setuptools import dist, setup, find_packages, Extension
 
-# should be fine now
-import numpy as np
-
 
 def readme():
     with open("README.md") as f:
