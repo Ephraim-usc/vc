@@ -13,6 +13,8 @@ download the package and install from local:
 
 For PC system, do:
 
+    rd .\vc.zip; rd -r .\vc-main
+
     .\wget.exe https://github.com/Ephraim-usc/vc/archive/refs/heads/main.zip -O vc.zip
     
     tar -xf  .\vc.zip
