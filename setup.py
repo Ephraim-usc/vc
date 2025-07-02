@@ -1,8 +1,5 @@
 from setuptools import dist, setup, find_packages, Extension
 
-# bootstrap numpy; can we workaround this? 
-#dist.Distribution().fetch_build_eggs(["numpy>=1.14.5"])
-
 # should be fine now
 import numpy as np
 
