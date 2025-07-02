@@ -1,1 +1,1 @@
-from .organs import plasma, lymph, liver, SI, spleen, other, tumor
+from .organs import plasma, lymph, lung, liver, SI, spleen, other, tumor
