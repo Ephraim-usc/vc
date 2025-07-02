@@ -18,6 +18,7 @@ setup(
     packages=['vc', 'vc.human'],
     package_dir = {
        'vc': 'vc',
+       'vc.cells': 'vc/cells',
        'vc.human': 'vc/human'},
     python_requires=">=3",
     install_requires=[
