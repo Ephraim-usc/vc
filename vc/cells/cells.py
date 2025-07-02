@@ -1,3 +1,5 @@
+from vc import *
+
 # 免疫细胞
 Tn = Cell("Tn", diameter = 6*units.um, markers = ["CD3", "PD1"], copies = [50000, 10000])
 Teff = Cell("Teff", diameter = 6*units.um, markers = ["CD3", "PD1"], copies = [50000, 50000])
