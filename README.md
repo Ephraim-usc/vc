@@ -1,5 +1,5 @@
-# qsp
-A general framework for quantitative systems pharmacology (QSP)
+# vc
+Virtual Cells system of antibody therapeutics QsP simulations.
 
 
 Installation
