@@ -1,3 +1,6 @@
+from vc import *
+from vc.cells import *
+
 plasma = Organ("plasma", 3126 * units.ml)
 plasma.set_cell(Tn, total = 7.9E+09)
 
