@@ -15,7 +15,7 @@ setup(
     long_description=readme(),
     long_description_content_type="text/markdown",
     url="https://github.com/Ephraim-usc/vc.git",
-    packages=['vc', 'vc.human'],
+    packages=['vc', 'vc.cells', 'vc.human'],
     package_dir = {
        'vc': 'vc',
        'vc.cells': 'vc/cells',
