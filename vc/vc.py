@@ -342,13 +342,13 @@ class History:
       index_ = index
       columns_ = columns
     
-    buffer = [[t] + data[key][np.ix_(index_, columns_)].ravel().tolist() for t, data in self.data.items()]
+    buffer = [[t, data[key][np.ix_(index_, columns_)].sum()] + data[key][np.ix_(index_, columns_)].ravel().tolist() for t, data in self.data.items()]
     if len(columns) == 1:
-      names = ["t"] + [i for i in index]
+      names = ["t", "sum"] + [i for i in index]
     elif len(index) == 1:
-      names = ["t"] + [j for j in columns]
+      names = ["t", "sum"] + [j for j in columns]
     else:
-      names = ["t"] + [str(i) + '|' + str(j) for j in columns for i in index]
+      names = ["t", "sum"] + [str(i) + '|' + str(j) for j in columns for i in index]
     return pd.DataFrame(buffer, columns = names)
 
 
