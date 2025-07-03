@@ -40,3 +40,6 @@ system = vc.InvivoSystem(plasma, lymph, [tumor, lung, liver, SI, spleen, other],
 system.add_isodrug_transform(probody, drug, ["tumor", "plasma", "lymph", "SI", "lung", "other"], [0.3/units.d, 0.01/units.d, 0.02/units.d, 0.02/units.d, 0.02/units.d, 0.02/units.d])
 system.add_drug_dose(probody, 0.1*units.mpk, molecular_weight = 100*units.kDa, body_weight = 70*units.kg)
 system.run(24*units.h, t_step = 1/6 * units.h, verbose = True)
+
+analytes = ['mTCE[,,]'] + system.get_all_analytes_of_drug_on_cell(probody, cell_PRAD) + ['TCE[,,]'] + system.get_all_analytes_of_drug_on_cell(drug, cell_PRAD)
+system.history['x', analytes ,'tumor']
