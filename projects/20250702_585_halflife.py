@@ -102,16 +102,51 @@ probody.set_synapse_probability(0.1)
 
 system = vc.InvivoSystem(plasma, lymph, [tumor, lung, liver, SI, spleen, other], [cell_lung, cell_SI, Tn, Teff, cell_PRAD, cell_spleen], [probody, drug], [], halflives = [70*units.h, 1*units.h])
 system.add_isodrug_transform(probody, drug, ["tumor", "plasma", "lymph", "SI", "lung", "other"], [0.3/units.d, 0.01/units.d, 0.02/units.d, 0.02/units.d, 0.02/units.d, 0.02/units.d])
-system.add_drug_dose(probody, 0.3*units.mg, molecular_weight = 100*units.kDa, body_weight = 70*units.kg)
-system.run(24*7*units.h, t_step = 1/6 * units.h, verbose = True)
-system.add_drug_dose(probody, 1.5*units.mg, molecular_weight = 100*units.kDa, body_weight = 70*units.kg)
-system.run(24*7*units.h, t_step = 1/6 * units.h, verbose = True)
 system.add_drug_dose(probody, 6*units.mg, molecular_weight = 100*units.kDa, body_weight = 70*units.kg)
-system.run(24*7*units.h, t_step = 1/6 * units.h, verbose = True)
-system.add_drug_dose(probody, 6*units.mg, molecular_weight = 100*units.kDa, body_weight = 70*units.kg)
-system.run(24*7*units.h, t_step = 1/6 * units.h, verbose = True)
+system.run(24*28*units.h, t_step = 1/6 * units.h, verbose = True)
+
+print_pk(system, "VIB585.png")
 
 
+
+
+
+drug = vc.Drug("TCE", 3)
+drug.set_affinity(",,", 0, "CD3", 10*units.nM, 9e-3/units.s)
+drug.set_affinity(",,", 1, "PSMA", 1*units.nM, 1e-4/units.s)
+drug.set_affinity(",,", 2, "STEAP1", 10*units.nM, 1e-3/units.s)
+drug.set_affinity(",,STEAP1", 1, "PSMA", 500/units.um**2, 1e-4/units.s)
+drug.set_affinity(",PSMA,", 2, "STEAP1", 5000/units.um**2, 1e-3/units.s)
+drug.set_trans("CD3", [",PSMA,", ",,STEAP1", ",PSMA,STEAP1"], 5000/units.um**2, 9e-3/units.s)
+drug.set_trans("PSMA", ["CD3,,"], 500/units.um**2, 1e-4/units.s)
+drug.set_trans("STEAP1", ["CD3,,"], 5000/units.um**2, 1e-3/units.s)
+drug.set_internalization(["CD3,,"], 0.02/units.h)
+drug.set_internalization([",PSMA,"], 0.02/units.h)
+drug.set_internalization([",,STEAP1"], 0.02/units.h)
+drug.set_internalization([",PSMA,STEAP1"], 0.02/units.h)
+drug.set_synapse_probability(0.1)
+
+probody = vc.Drug("mTCE", 3)
+probody.set_affinity(",,", 0, "CD3", 200*units.nM, 9e-3/units.s)
+probody.set_affinity(",,", 1, "PSMA", 20*units.nM, 1e-4/units.s)
+probody.set_affinity(",,", 2, "STEAP1", 10*units.nM, 1e-3/units.s)
+probody.set_affinity(",,STEAP1", 1, "PSMA", 10000/units.um**2, 1e-4/units.s)
+probody.set_affinity(",PSMA,", 2, "STEAP1", 5000/units.um**2, 1e-3/units.s)
+probody.set_trans("CD3", [",PSMA,", ",,STEAP1", ",PSMA,STEAP1"], 10000/units.um**2, 9e-3/units.s)
+probody.set_trans("PSMA", ["CD3,,"], 10000/units.um**2, 1e-4/units.s)
+probody.set_trans("STEAP1", ["CD3,,"], 5000/units.um**2, 1e-3/units.s)
+probody.set_internalization(["CD3,,"], 0.02/units.h)
+probody.set_internalization([",PSMA,"], 0.02/units.h)
+probody.set_internalization([",,STEAP1"], 0.02/units.h)
+probody.set_internalization([",PSMA,STEAP1"], 0.02/units.h)
+probody.set_synapse_probability(0.1)
+
+system = vc.InvivoSystem(plasma, lymph, [tumor, lung, liver, SI, spleen, other], [cell_lung, cell_SI, Tn, Teff, cell_PRAD, cell_spleen], [probody, drug], [], halflives = [70*units.h, 1*units.h])
+system.add_isodrug_transform(probody, drug, ["tumor", "plasma", "lymph", "SI", "lung", "other"], [0.3/units.d, 0.01/units.d, 0.02/units.d, 0.02/units.d, 0.02/units.d, 0.02/units.d])
+system.add_drug_dose(probody, 6*units.mg, molecular_weight = 100*units.kDa, body_weight = 70*units.kg)
+system.run(24*28*units.h, t_step = 1/6 * units.h, verbose = True)
+
+print_pk(system, "VIB585_int02.png")
 
 
 
