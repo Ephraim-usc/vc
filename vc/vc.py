@@ -728,5 +728,11 @@ class InvivoSystem(System):
   
   # 接受mpk或mg两种单位的剂量打入
   def add_drug_dose(self, drug, value, molecular_weight, body_weight): # 标准体重：小鼠28g，猴6.2kg，人71kg
-    conc = value * body_weight / molecular_weight / self.plasma.volume
+    if value.unit == units.mg:
+      conc = value / molecular_weight / self.plasma.volume
+    elif value.unit == units.mpk:
+      conc = value * body_weight / molecular_weight / self.plasma.volume
+    else:
+      print("unrecognized dose unit!")
+      conc = 0*units.nM
     self.add_drug(self.plasma.name, drug, conc)
