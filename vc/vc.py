@@ -303,6 +303,56 @@ class Drug: #以后要检查，不同药物之间对markers和solutes的定义�
 
 ############################# 定义系统 #############################
 
+class History:
+  def __init__(self, system, compartments, analytes, analyteses_bound, cells):
+    self.system = system
+    self.compartments = compartments
+    self.analytes = analytes
+    self.analyteses_bound = analyteses_bound
+    self.analytes_bound = [analyte_bound for analytes_bound in analyteses_bound for analyte_bound in analytes_bound] # 把y叠成一个矩阵方便索引
+    self.cells = cells
+    self.data = dict()
+  
+  def save(self):
+    t = self.system.t
+    y = np.concatenate(self.system.y, axis=0)
+    self.data[t] = {"x":self.system.x.copy(), "y":y, "c":self.system.c.copy()}
+  
+  def set(self, key, value):
+    t = self.system.t
+    self.data[t][key] = value
+  
+  def __getitem__(self, indices): # 维度分别为：key，analytes/analytes_bound/cells, compartments
+    key, index, columns = indices
+    if not isinstance(index, (list, tuple)):
+      index = (index, )
+    if not isinstance(columns, (list, tuple)):
+      columns = (columns, )
+    
+    if key == "x":
+      index_ = [self.analytes.index(_) for _ in index]
+      columns_ = [self.compartments.index(_) for _ in columns]
+    elif key == "y":
+      index_ = [self.analytes_bound.index(_) for _ in index]
+      columns_ = [self.compartments.index(_) for _ in columns]
+    elif key == "c":
+      index_ = [self.cells.index(_) for _ in index]
+      columns_ = [self.compartments.index(_) for _ in columns]
+    else:
+      index_ = index
+      columns_ = columns
+    
+    buffer = [[t] + data[key][np.ix_(index_, columns_)].ravel().tolist() for t, data in self.data.items()]
+    if len(columns) == 1:
+      names = ["t"] + [i for i in index]
+    elif len(index) == 1:
+      names = ["t"] + [j for j in columns]
+    else:
+      names = ["t"] + [str(i) + '|' + str(j) for j in columns for i in index]
+    return pd.DataFrame(buffer, columns = names)
+
+
+
 
 def decode_analyte(analyte):
   head = analyte.split(')')[0] + ')' if analyte[0] == '(' else ''
@@ -393,8 +443,15 @@ class System:
     self.y = [np.zeros([len(analyteses_bound), self.n_compartments], dtype = float) for analyteses_bound in self.analyteses_bound] # 2D concentration of analytes, in 1/units.um**2
     self.c = np.zeros([self.n_cells, self.n_compartments], dtype = float) # concentration of cells, in 1/units.ml
     
-    self.history = []
+    self.history = History(self, self.compartments, self.analytes, self.analyteses_bound, self.cells)
   
+  # 下面两个函数方便找到drug在此系统中对应的所有analytes
+  def get_all_analytes_of_drug(self, drug):
+    return [analyte for analyte in self.analytes if analyte.split(')')[-1].split('[')[0] == drug.name]
+  
+  def get_all_analytes_of_drug_on_cell(self, drug, cell):
+    return [f"({cell.name}){drug.name}[{state}]" for state in drug.get_states_on_cell(cell, self.solutes)]
+
   # 假定刚对x做了更新，现在要刷新y的数据
   # 1nM的抗原，若分布在1/ml的细胞上，细胞表面积为1um**2，则抗原二维密度为 1nM * ml * avagadro / um**2 = 602214150000/um**2
   def _refresh_y(self):
@@ -520,23 +577,6 @@ class System:
     value_ = value.number(units.nM)
     self.x[analyte_, compartment_] += value_
   
-  def get_total_drug_in_compartment(self, compartments, drug):
-    _compartments = [self.compartments.index(compartment) for compartment in compartments]
-    analytes = []
-    for analyte in self.analytes:
-      if analyte.split(')')[-1].split('[')[0] == drug.name:
-        analytes.append(analyte)
-    _analytes = [self.analytes.index(analyte) for analyte in analytes]
-    return system.x[np.ix_(_analytes, _compartments)].sum(axis = 0)
-    #return system.x[np.ix_(_analytes, _compartments)]
-  
-  def get_total_drug_on_cell(self, compartments, cell, drug):
-    _compartments = [self.compartments.index(compartment) for compartment in compartments]
-    _cell = self.cells.index(cell)
-    analytes = [f"({cell.name}){drug.name}[{state}]" for state in drug.get_states_on_cell(cell, self.solutes)]
-    _analytes = [self.analyteses_bound[_cell].index(analyte) for analyte in analytes]
-    return system.y[_cell][np.ix_(_analytes, _compartments)].sum(axis = 0, keepdims = True)
-  
   def _run_reactions(self, _t):
     for compartment_, RSs_2d in enumerate(self.RS_2d):
       for cell_, rs in enumerate(RSs_2d):
@@ -598,7 +638,7 @@ class System:
       self.t = min(self.t + _t_step, _t_end) #采用这种写法，而不是self.t + _t_delta，是为了避免加法的偏差，尽量保持一个“整数”
       
       if math.floor(self.t / _t_record) > math.floor(_t_prev / _t_record):
-        self.history.append((self.t, self.c.copy(), self.x.copy(), self.y.copy()))
+        self.history.save()
       if verbose:
         pbar.update(_t_delta)
       if math.isclose(self.t, _t_end, rel_tol = 0, abs_tol = 1e-9):
@@ -690,4 +730,3 @@ class InvivoSystem(System):
   def add_drug_dose(self, drug, value, molecular_weight, body_weight): # 标准体重：小鼠28g，猴6.2kg，人71kg
     conc = value * body_weight / molecular_weight / self.plasma.volume
     self.add_drug(self.plasma.name, drug, conc)
-
