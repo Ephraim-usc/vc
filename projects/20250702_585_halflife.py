@@ -51,11 +51,11 @@ def print_tox(system, filename, title):
   
   fig, ax = plt.subplots()
   
-  ax.plot(ts, system.history['x', analytes, 'SI']["sum"], label = "SI total drug", color = "tab:blue")
-  ax.plot(ts, system.history['x', analytes, 'lung']["sum"], label = "lung total drug", color = "tab:purple")
+  ax.plot(ts, system.history['x', analytes, 'SI']["sum"], label = "SI total drug", color = "tab:purple")
+  ax.plot(ts, system.history['x', analytes, 'lung']["sum"], label = "lung total drug", color = "tab:orange")
   
-  ax.plot(ts, system.history['x', analytes_drug, 'SI']["sum"], label = "SI uTCE", color = "tab:red", linestyle = "blue")
-  ax.plot(ts, system.history['x', analytes_drug, 'lung']["sum"], label = "lung uTCE", color = "tab:blue", linestyle = "purple")
+  ax.plot(ts, system.history['x', analytes_drug, 'SI']["sum"], label = "SI uTCE", color = "tab:purple", linestyle = "dashed")
+  ax.plot(ts, system.history['x', analytes_drug, 'lung']["sum"], label = "lung uTCE", color = "tab:orange", linestyle = "dashed")
   
   ax.set_xlabel("time (d)")
   ax.set_xlim(0, 28)
