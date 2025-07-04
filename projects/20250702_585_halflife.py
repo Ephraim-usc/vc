@@ -104,7 +104,7 @@ system.add_drug_dose(probody, 6*units.mg, molecular_weight = 100*units.kDa, body
 system.run(24*7*units.h, t_step = 1/6 * units.h, verbose = True)
 system.add_drug_dose(probody, 6*units.mg, molecular_weight = 100*units.kDa, body_weight = 70*units.kg)
 system.run(24*7*units.h, t_step = 1/6 * units.h, verbose = True)
-print_pk(system, "JANX007.png", "JANX007 0.3/1.6/6mg")
+print_pk(system, "JANX007_4doses.png", "JANX007 0.3/1.6/6mg")
 
 system = vc.InvivoSystem(plasma, lymph, [tumor, lung, liver, SI, spleen, other], [cell_lung, cell_SI, Tn, Teff, cell_PRAD, cell_spleen], [probody, drug], [], halflives = [50*units.h, 1*units.h])
 system.add_isodrug_transform(probody, drug, ["tumor", "plasma", "lymph", "SI", "lung", "other"], [0.3/units.d, 0.05/units.d, 0.05/units.d, 0.05/units.d, 0.05/units.d, 0.05/units.d])
