@@ -15,7 +15,7 @@ def print_pk(system, filename):
   analytes_probody = system.get_all_analytes_of_drug(probody)
   analytes_drug = system.get_all_analytes_of_drug(drug)
   analytes = analytes_probody + analytes_drug
-  ts = system.history.data.keys()
+  ts = [t/24 for t in system.history.data.keys()]
   
   fig, ax = plt.subplots()
   
@@ -25,11 +25,19 @@ def print_pk(system, filename):
   ax.plot(ts, system.history['x', analytes_drug, 'plasma']["sum"], label = "plasma uTCE", color = "tab:red", linestyle = "dashed")
   ax.plot(ts, system.history['x', analytes_drug, 'tumor']["sum"], label = "tumor uTCE", color = "tab:blue", linestyle = "dashed")
   
+  ax.set_xlabel("time (d)")
+  ax.set_xlim(0, 28)
+  ax.axvspan(0, 7, alpha=0.1, color = "grey")
+  ax.axvspan(7, 14, alpha=0.2, color = "grey")
+  ax.axvspan(14, 28, alpha=0.3, color = "grey")
+  
   ax.set_yscale("log")
+  ax.set_ylabel("conc. (nM)")
+  ax.set_ylim(1e-6, 1e3)
   
   ax.legend(loc = "upper right", prop={'size': 6})
   fig.tight_layout()
-  plt.gcf().set_size_inches(8, 7)
+  plt.gcf().set_size_inches(8, 8)
   fig.savefig(filename, dpi = 300)
   plt.close(fig)
 
