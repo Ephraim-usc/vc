@@ -689,6 +689,9 @@ class Organ:
     if density is None:
       density = total / self.volume
     self.cells[cell] = density
+  
+  def get_ABC(self):
+    return (self.entry / (self.exit_plasma + self.exit_lymph)).number()
 
 
 # InVivo系统是系统的子类，要求必须有血液和淋巴
