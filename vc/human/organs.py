@@ -30,8 +30,17 @@ other = Organ("other", 5000 * units.ml)
 other.add_convection(plasma_flow = 100000 * units.ml/units.h, lymph_flow_ratio = 0.002, plasma_reflection = 0.95, lymph_reflection = 0.2)
 other.set_cell(Tn, total = 1.1E+10)
 
+'''
 tumor = Organ("tumor", 170 * units.ul * 0.55)
 tumor.add_convection(plasma_flow = 12.7/units.h * 170*units.ul, lymph_flow_ratio = 0.002, plasma_reflection = 0.842, lymph_reflection = 0.2)
+tumor.add_diffusion(0.07/0.55, capillary_radius = 10 * units.um, capillary_permeability = 3e-7 * units.cm/units.s)
+tumor.set_cell(Tn, density = 3E8/units.ml * 0.1)
+tumor.set_cell(Teff, density = 3E8/units.ml * 0.1)
+#tumor.set_cell(cell_PRAD, density = 3E8/units.ml)
+'''
+
+tumor = Organ("tumor", 170 * units.ul * 0.55)
+tumor.add_convection(plasma_flow = 12.7/units.h * 170*units.ul, lymph_flow_ratio = 0.02, plasma_reflection = 0.98, lymph_reflection = 0.1)
 tumor.add_diffusion(0.07/0.55, capillary_radius = 10 * units.um, capillary_permeability = 3e-7 * units.cm/units.s)
 tumor.set_cell(Tn, density = 3E8/units.ml * 0.1)
 tumor.set_cell(Teff, density = 3E8/units.ml * 0.1)
