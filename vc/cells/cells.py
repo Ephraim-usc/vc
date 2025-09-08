@@ -1,8 +1,8 @@
 from vc import *
 
 # 免疫细胞
-Tn = Cell("Tn", diameter = 6*units.um, markers = ["CD3", "PD1"], copies = [50000, 10000])
-Teff = Cell("Teff", diameter = 6*units.um, markers = ["CD3", "PD1"], copies = [50000, 50000])
+Tn = Cell("Tn", diameter = 6*units.um, markers = ["CD3", "PD1", "CD25", "CD132"], copies = [50000, 10000, 200, 4000])
+Teff = Cell("Teff", diameter = 6*units.um, markers = ["CD3", "PD1", "CD25", "CD132"], copies = [50000, 50000, 20000, 4000])
 
 # 组织细胞
 cell_lung = Cell("lung", diameter = 50*units.um, markers = ["PSMA", "STEAP1"], copies = [22069, 39737])
