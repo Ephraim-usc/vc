@@ -29,14 +29,14 @@ def print(system, filename, title):
   ax.plot(ts, system.history['y', Tn_PD1_analytes, 'lung']["sum"]*area, label = "Lung PD1 not-bound", color = "tab:blue", linestyle = "dashed")
   
   ax.set_xlabel("time (d)")
-  ax.set_xlim(0, 28)
+  ax.set_xlim(0, 63)
   ax.axvspan(0, 21, alpha=0.1, color = "grey")
   ax.axvspan(21, 42, alpha=0.2, color = "grey")
   ax.axvspan(42, 63, alpha=0.3, color = "grey")
   
   #ax.set_yscale("log")
   ax.set_ylabel("number")
-  #ax.set_ylim(1e-6, 1e3)
+  ax.set_ylim(0, 4000)
   
   ax.set_title(title)
   ax.legend(loc = "upper right", prop={'size': 6})
